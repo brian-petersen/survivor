@@ -1,11 +1,10 @@
 use rand::random;
+use rayon::prelude::*;
 
-const SAMPLE_SIZE: usize = 1_000_000;
+const SAMPLE_SIZE: usize = 1_000_000_0;
 
 fn perform_wave(sample: &mut Vec<bool>) {
-    for e in &mut *sample {
-        *e = random();
-    }
+    sample.par_iter_mut().for_each(|e| *e = random());
 
     let survivors = sample.iter().filter(|e| **e).count();
     sample.resize(survivors, false);
@@ -23,7 +22,6 @@ fn main() {
 
         let death = start - sample.len();
         let ratio = death as f64 / start as f64;
-
 
         println!("{}\t{}\t{}\t{:.2}", trial, start, death, ratio);
 
